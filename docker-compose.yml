@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      MYSQL_DATABASE: studa
+    expose:
+      - "9000"
+    ports:
+      - "9000:3306"
