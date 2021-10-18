@@ -57,7 +57,7 @@ exports.loginService = async (body) => {
   },
   `${process.env.JWT_KEY}`,
   {
-    expiresIn: '1d',
+    expiresIn: '24h',
   });
 
   return token;
