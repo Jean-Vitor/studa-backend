@@ -8,10 +8,10 @@ const router = Router();
 router.post('/register', register);
 router.post('/login', login);
 
-// router.get("/user/:id", findOne);
 
+
+// TODO atualizar e remover usuário;
 // router.put("/user/:id", update);
-
 // router.delete("/user/:id", remove);
 
 module.exports = router;
