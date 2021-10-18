@@ -4,7 +4,7 @@ require('dotenv').config();
 const httpException = require('../exception/http-exception');
 const { BAD_REQUEST, UNAUTHORIZED } = require('../constants/http-exception.constant');
 const { registerRepository, findOneRepository } = require('../repository/user.repository');
-const { isEmptyBody } = require('../utils/isEmptyBody');
+const isEmptyBody = require('../utils/isEmptyBody');
 
 exports.registerService = async (body) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);

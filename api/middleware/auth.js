@@ -9,8 +9,8 @@ module.exports = (req, res, next) => {
 
   try {
     const token = authorization.split(' ')[1];
-    const decode = jwt.verify(token, `${process.env.JWT_KEY}`);
-    req.user = decode;
+    const decodedUser = jwt.verify(token, `${process.env.JWT_KEY}`);
+    req.user = decodedUser;
     next();
   } catch (error) {
     res.status(code).send({ message });

@@ -5,7 +5,7 @@ const {
   findAllRepository, findAllCompletedRepository,
   findByPkRepository, updateRepository,
 } = require('../repository/task.repository');
-const { isEmptyBody } = require('../utils/isEmptyBody');
+const isEmptyBody = require('../utils/isEmptyBody');
 
 exports.createService = (body) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);

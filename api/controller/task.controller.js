@@ -7,6 +7,8 @@ const {
   findByPkService,
 } = require('../service/task.service');
 
+const getStatusAndMessageError = require('../utils/getStatusAndMessageError')
+
 exports.create = async (req, res) => {
   const {
     body,
@@ -16,8 +18,7 @@ exports.create = async (req, res) => {
     const response = await createService(body);
     res.status(201).send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -29,8 +30,7 @@ exports.findAll = async (req, res) => {
     const response = await findAllService();
     res.send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -42,8 +42,7 @@ exports.findAllCompleted = async (req, res) => {
     const response = await findAllCompletedService();
     res.send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -57,8 +56,7 @@ exports.findOne = async (req, res) => {
     const response = await findByPkService(id);
     res.send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -75,8 +73,7 @@ exports.update = async (req, res) => {
     const response = await updateService(id, body);
     res.send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -90,8 +87,7 @@ exports.remove = async (req, res) => {
     await removeService(id);
     res.status(200).send();
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
