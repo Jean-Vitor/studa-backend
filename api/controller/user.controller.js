@@ -3,6 +3,8 @@ const {
   loginService,
 } = require('../service/user.service');
 
+const getStatusAndMessageError = require('../utils/getStatusAndMessageError')
+
 exports.register = async (req, res) => {
   const {
     body,
@@ -12,8 +14,7 @@ exports.register = async (req, res) => {
     const response = await registerService(body);
     res.status(201).send(response);
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
@@ -32,8 +33,7 @@ exports.login = async (req, res) => {
       token: response,
     });
   } catch (err) {
-    const status = err.status || 500;
-    const message = err.message || 'Internal Server Error!';
+    const {status, message} = getStatusAndMessageError(err)
     res.status(status).send({
       message,
     });
