@@ -35,4 +35,8 @@ Task.belongsTo(User, {
   onDelete: 'cascade',
 });
 
+User.hasMany(Task, {
+  constraint: true,
+});
+
 module.exports = Task;
