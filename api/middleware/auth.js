@@ -5,7 +5,7 @@ require('dotenv').config();
 const getDecodedUser = (authorization) => {
   const token = authorization.split(' ')[1];
   return jwt.verify(token, `${process.env.JWT_KEY}`);
-}
+};
 
 const authUser = (req, res, next) => {
   const { code, message } = UNAUTHORIZED;

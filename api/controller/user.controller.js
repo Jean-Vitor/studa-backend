@@ -3,7 +3,7 @@ const {
   loginService,
 } = require('../service/user.service');
 
-const getStatusAndMessageError = require('../utils/getStatusAndMessageError')
+const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
 
 exports.register = async (req, res) => {
   const {
@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
     const response = await registerService(body);
     res.status(201).send(response);
   } catch (err) {
-    const {status, message} = getStatusAndMessageError(err)
+    const { status, message } = getStatusAndMessageError(err);
     res.status(status).send({
       message,
     });
@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
       token: response,
     });
   } catch (err) {
-    const {status, message} = getStatusAndMessageError(err)
+    const { status, message } = getStatusAndMessageError(err);
     res.status(status).send({
       message,
     });
