@@ -34,8 +34,4 @@ const User = database.define('user', {
   },
 });
 
-User.hasMany(Task, {
-  constraint: true,
-});
-
 module.exports = User;

@@ -4,7 +4,11 @@ exports.createRepository = (newTask) => Task.create(newTask);
 
 exports.findByPkRepository = (id) => Task.findByPk(id);
 
-exports.findAllRepository = () => Task.findAll();
+exports.findAllRepository = (id) => Task.findAll({
+  where: {
+    userId: id,
+  },
+});
 
 exports.findAllCompletedRepository = () => Task.findAll({
   where: {

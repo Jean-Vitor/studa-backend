@@ -12,10 +12,11 @@ const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
 exports.create = async (req, res) => {
   const {
     body,
+    user,
   } = req;
 
   try {
-    const response = await createService(body);
+    const response = await createService(body, user);
     res.status(201).send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -26,8 +27,12 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = async (req, res) => {
+  const {
+    user,
+  } = req;
+
   try {
-    const response = await findAllService();
+    const response = await findAllService(user.id);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
