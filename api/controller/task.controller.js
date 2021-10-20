@@ -98,3 +98,18 @@ exports.remove = async (req, res) => {
     });
   }
 };
+
+exports.completeTask = async (req, res) => { // aqui
+  const { id } = req.params;
+  const { id: userId } = req.user;
+
+  try {
+    await completeTaskService(id, userId);
+    res.status(200).send();
+  } catch (err) {
+    const { status, message } = getStatusAndMessageError(err);
+    res.status(status).send({
+      message,
+    });
+  }
+};

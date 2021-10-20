@@ -27,3 +27,12 @@ exports.removeRepository = (id) => Task.destroy({
     id,
   },
 });
+
+exports.completeTaskRepository = (id) => Task.update({ // aqui
+  completed: true,
+},
+{
+  where: {
+    id,
+  },
+});

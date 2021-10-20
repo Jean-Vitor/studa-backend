@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const {
-  create, findAll, findAllCompleted, findOne, update, remove,
+  create, findAll, findAllCompleted, findOne, update, remove, completeTask,
 } = require('../controller/task.controller');
 
 const auth = require('../middleware/auth');
@@ -14,6 +14,8 @@ router.get('/task', auth, findAll);
 router.get('/task/:id', auth, findOne);
 
 router.get('/task/completed', auth, findAllCompleted);
+
+router.post('/task/completed', auth, completeTask);
 
 router.put('/task/:id', auth, update);
 
