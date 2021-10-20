@@ -4,7 +4,7 @@ const {
   createTaskRepository, removeTaskRepository,
   findAllTasksRepository, findAllCompletedTasksRepository,
   findTaskByPkRepository, updateTaskRepository,
-  findOneTaskRepository,
+  findOneTaskRepository, completeTaskRepository,
 } = require('../repository/task.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 

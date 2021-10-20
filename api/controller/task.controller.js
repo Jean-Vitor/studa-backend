@@ -5,6 +5,7 @@ const {
   removeService,
   updateService,
   findByPkService,
+  completeTaskService,
 } = require('../service/task.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
