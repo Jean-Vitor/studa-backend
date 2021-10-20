@@ -53,3 +53,11 @@ exports.updateService = async (id, body) => {
   const [responseID] = await updateRepository(id, body);
   if (!responseID) throw httpException(NOT_FOUND);
 };
+
+exports.completeTaskService = async (id, userId) => {
+  const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
+  if (!isTaskOwner) throw httpException(UNAUTHORIZED);
+
+  const [responseID] = await completeTaskRepository(id);
+  if (!responseID) throw httpException(NOT_FOUND);
+};
