@@ -3,6 +3,7 @@ const {
   loginService,
   removeUserService,
   updateUserService,
+  updatePasswordUserService,
 } = require('../service/user.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
@@ -63,6 +64,23 @@ exports.updateUser = async (req, res) => {
 
   try {
     const response = await updateUserService(user.id, body);
+    res.send(response);
+  } catch (err) {
+    const { status, message } = getStatusAndMessageError(err);
+    res.status(status).send({
+      message,
+    });
+  }
+};
+
+exports.updatePasswordUser = async (req, res) => {
+  const {
+    body,
+    user,
+  } = req;
+
+  try {
+    const response = await updatePasswordUserService(user.id, body);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
