@@ -43,8 +43,12 @@ exports.findAll = async (req, res) => {
 };
 
 exports.findAllCompleted = async (req, res) => {
+  const {
+    user,
+  } = req;
+
   try {
-    const response = await findAllCompletedService();
+    const response = await findAllCompletedService(user.id);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -70,12 +74,13 @@ exports.findOne = async (req, res) => {
 
 exports.update = async (req, res) => {
   const { id } = req.params;
+  const { id: userId } = req.user;
   const {
     body,
   } = req;
 
   try {
-    const response = await updateService(id, body);
+    const response = await updateService(id, body, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -87,9 +92,10 @@ exports.update = async (req, res) => {
 
 exports.remove = async (req, res) => {
   const { id } = req.params;
+  const { id: userId } = req.user;
 
   try {
-    await removeService(id);
+    await removeService(id, userId);
     res.status(200).send();
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
