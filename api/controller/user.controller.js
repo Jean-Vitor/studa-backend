@@ -1,6 +1,8 @@
 const {
   registerService,
   loginService,
+  removeUserService,
+  updateUserService,
 } = require('../service/user.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
@@ -32,6 +34,36 @@ exports.login = async (req, res) => {
       message: 'Successfully authenticated user',
       token: response,
     });
+  } catch (err) {
+    const { status, message } = getStatusAndMessageError(err);
+    res.status(status).send({
+      message,
+    });
+  }
+};
+
+exports.removeUser = async (req, res) => {
+  const { id } = req.user;
+  try {
+    await removeUserService(id);
+    res.status(200).send();
+  } catch (err) {
+    const { status, message } = getStatusAndMessageError(err);
+    res.status(status).send({
+      message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const {
+    body,
+    user,
+  } = req;
+
+  try {
+    const response = await updateUserService(user.id, body);
+    res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
     res.status(status).send({

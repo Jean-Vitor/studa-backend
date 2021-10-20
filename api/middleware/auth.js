@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { UNAUTHORIZED } = require('../constants/http-exception.constant');
-const { findOneRepository } = require('../repository/user.repository');
+const { findOneUserRepository } = require('../repository/user.repository');
 require('dotenv').config();
 
 const getDecodedUser = (authorization) => {
@@ -15,7 +15,7 @@ const authUser = async (req, res, next) => {
 
   try {
     const decodedUser = getDecodedUser(authorization);
-    const isUserExists = await findOneRepository({
+    const isUserExists = await findOneUserRepository({
       where: {
         id: decodedUser.id,
       },

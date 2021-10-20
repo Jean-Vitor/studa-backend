@@ -2,8 +2,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const httpException = require('../exception/http-exception');
-const { BAD_REQUEST, UNAUTHORIZED } = require('../constants/http-exception.constant');
-const { registerRepository, findOneRepository } = require('../repository/user.repository');
+const { BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } = require('../constants/http-exception.constant');
+const {
+  registerRepository,
+  findOneUserRepository,
+  removeUserRepository,
+  updateUserRepository,
+} = require('../repository/user.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 
 exports.registerService = async (body) => {
@@ -22,7 +27,7 @@ exports.registerService = async (body) => {
 
   try {
     const hash = await bcrypt.hash(password, 10);
-    const user = await findOneRepository({ where: { email } });
+    const user = await findOneUserRepository({ where: { email } });
     if (user) throw httpException({ code: 409, message: 'Validation error: email already exist' });
 
     const newUser = {
@@ -44,7 +49,7 @@ exports.loginService = async (body) => {
     password,
   } = body;
 
-  const user = await findOneRepository({ where: { email } });
+  const user = await findOneUserRepository({ where: { email } });
   if (!user) throw httpException(UNAUTHORIZED);
 
   const isPasswordCorrectly = await bcrypt.compare(password, user.password);
@@ -62,4 +67,17 @@ exports.loginService = async (body) => {
   });
 
   return token;
+};
+
+exports.removeUserService = async (id) => {
+  const responseID = await removeUserRepository(id);
+  if (!responseID) throw httpException(NOT_FOUND);
+};
+
+exports.updateUserService = async (id, body) => {
+  if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
+  const { email, name } = body;
+
+  const [responseID] = await updateUserRepository(id, { email, name });
+  if (!responseID) throw httpException(NOT_FOUND);
 };

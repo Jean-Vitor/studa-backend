@@ -1,15 +1,14 @@
 const { Router } = require('express');
 const {
-  register, login,
+  register, login, removeUser, updateUser,
 } = require('../controller/user.controller');
+const auth = require('../middleware/auth');
 
 const router = Router();
 
 router.post('/register', register);
 router.post('/login', login);
-
-// TODO atualizar e remover usuário;
-// router.put("/user/:id", update);
-// router.delete("/user/:id", remove);
+router.put('/user', auth, updateUser);
+router.delete('/user', auth, removeUser);
 
 module.exports = router;
