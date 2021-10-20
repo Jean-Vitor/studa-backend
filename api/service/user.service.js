@@ -8,6 +8,7 @@ const {
   findOneUserRepository,
   removeUserRepository,
   updateUserRepository,
+  findUserByPkRepository,
 } = require('../repository/user.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 
@@ -79,5 +80,26 @@ exports.updateUserService = async (id, body) => {
   const { email, name } = body;
 
   const [responseID] = await updateUserRepository(id, { email, name });
+  if (!responseID) throw httpException(NOT_FOUND);
+};
+
+exports.updatePasswordUserService = async (id, body) => {
+  if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
+  const { currentPassword, newPassword } = body;
+
+  const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
+  if (newPassword.includes(' ') || !newPassword.match(regex)) {
+    throw httpException({ code: 400, message: 'Validation error: password is not valid' });
+  }
+
+  const user = await findUserByPkRepository(id);
+  if (!user) throw httpException(UNAUTHORIZED);
+
+  const isPasswordCorrectly = await bcrypt.compare(currentPassword, user.password);
+  if (!isPasswordCorrectly) throw httpException(UNAUTHORIZED);
+
+  const hash = await bcrypt.hash(newPassword, 10);
+
+  const [responseID] = await updateUserRepository(id, { password: hash });
   if (!responseID) throw httpException(NOT_FOUND);
 };
