@@ -1,28 +1,31 @@
 const Task = require('../model/Task');
 
-exports.createRepository = (newTask) => Task.create(newTask);
+exports.createTaskRepository = (newTask) => Task.create(newTask);
 
-exports.findByPkRepository = (id) => Task.findByPk(id);
+exports.findTaskByPkRepository = (id) => Task.findByPk(id);
 
-exports.findAllRepository = (id) => Task.findAll({
+exports.findOneTaskRepository = (filter) => Task.findOne(filter);
+
+exports.findAllTasksRepository = (id) => Task.findAll({
   where: {
     userId: id,
   },
 });
 
-exports.findAllCompletedRepository = () => Task.findAll({
+exports.findAllCompletedTasksRepository = (id) => Task.findAll({
   where: {
     completed: true,
+    userId: id,
   },
 });
 
-exports.updateRepository = (id, body) => Task.update(body, {
+exports.updateTaskRepository = (id, body) => Task.update(body, {
   where: {
     id,
   },
 });
 
-exports.removeRepository = (id) => Task.destroy({
+exports.removeTaskRepository = (id) => Task.destroy({
   where: {
     id,
   },

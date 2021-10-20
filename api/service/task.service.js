@@ -1,9 +1,10 @@
 const httpException = require('../exception/http-exception');
-const { NOT_FOUND, BAD_REQUEST } = require('../constants/http-exception.constant');
+const { NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = require('../constants/http-exception.constant');
 const {
-  createRepository, removeRepository,
-  findAllRepository, findAllCompletedRepository,
-  findByPkRepository, updateRepository,
+  createTaskRepository, removeTaskRepository,
+  findAllTasksRepository, findAllCompletedTasksRepository,
+  findTaskByPkRepository, updateTaskRepository,
+  findOneTaskRepository,
 } = require('../repository/task.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 
@@ -27,29 +28,35 @@ exports.createService = (body, user) => {
     userId: id,
   };
 
-  return createRepository(newTask);
+  return createTaskRepository(newTask);
 };
 
-exports.removeService = async (id) => {
-  const responseID = await removeRepository(id);
-  if (!responseID) throw httpException(NOT_FOUND);
-};
+exports.findAllService = (userId) => findAllTasksRepository(userId);
 
-exports.findAllService = (userId) => findAllRepository(userId);
-
-exports.findAllCompletedService = (userId) => findAllCompletedRepository(userId);
+exports.findAllCompletedService = (userId) => findAllCompletedTasksRepository(userId);
 
 exports.findByPkService = async (id) => {
-  const data = await findByPkRepository(id);
+  const data = await findTaskByPkRepository(id);
 
   if (!data) throw httpException(NOT_FOUND);
 
   return data;
 };
 
-exports.updateService = async (id, body) => {
+exports.removeService = async (id, userId) => {
+  const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
+  if (!isTaskOwner) throw httpException(UNAUTHORIZED);
+
+  const responseID = await removeTaskRepository(id);
+  if (!responseID) throw httpException(NOT_FOUND);
+};
+
+exports.updateService = async (id, body, userId) => {
+  const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
+  if (!isTaskOwner) throw httpException(UNAUTHORIZED);
+
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
 
-  const [responseID] = await updateRepository(id, body);
+  const [responseID] = await updateTaskRepository(id, body);
   if (!responseID) throw httpException(NOT_FOUND);
 };

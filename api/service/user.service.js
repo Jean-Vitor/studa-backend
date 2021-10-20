@@ -15,8 +15,10 @@ exports.registerService = async (body) => {
     name,
   } = body;
 
-  const regex = '^(?=.*d)(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
-  if (!password.match(regex)) throw httpException({ code: 400, message: 'Validation error: password is not valid' });
+  const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
+  if (password.includes(' ') || !password.match(regex)) {
+    throw httpException({ code: 400, message: 'Validation error: password is not valid' });
+  }
 
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -30,7 +32,6 @@ exports.registerService = async (body) => {
     };
     return registerRepository(newUser);
   } catch (error) {
-    console.error(error);
     throw httpException(error);
   }
 };
