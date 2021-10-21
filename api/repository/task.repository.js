@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Task = require('../model/Task');
 
 exports.createTaskRepository = (newTask) => Task.create(newTask);
@@ -14,8 +15,11 @@ exports.findAllTasksRepository = (id) => Task.findAll({
 
 exports.findAllCompletedTasksRepository = (id) => Task.findAll({
   where: {
-    completed: true,
-    userId: id,
+    [Op.and]:
+      [
+        { completed: { [Op.is]: true } },
+        { userId: id },
+      ],
   },
 });
 
@@ -31,7 +35,7 @@ exports.removeTaskRepository = (id) => Task.destroy({
   },
 });
 
-exports.completeTaskRepository = (id) => Task.update({ // aqui
+exports.completeTaskRepository = (id) => Task.update({
   completed: true,
 },
 {

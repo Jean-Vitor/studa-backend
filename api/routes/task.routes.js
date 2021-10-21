@@ -11,11 +11,11 @@ router.post('/task', auth, create);
 
 router.get('/task', auth, findAll);
 
-router.get('/task/:id', auth, findOne);
-
 router.get('/task/completed', auth, findAllCompleted);
 
-router.post('/task/completed', auth, completeTask);
+router.get('/task/:id', auth, findOne);
+
+router.post('/task/completed/:id', auth, completeTask);
 
 router.put('/task/:id', auth, update);
 

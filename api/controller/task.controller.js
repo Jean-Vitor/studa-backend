@@ -17,7 +17,7 @@ exports.create = async (req, res) => {
   } = req;
 
   try {
-    const response = await createService(body, user);
+    const response = await createService(body, user.id);
     res.status(201).send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -31,6 +31,8 @@ exports.findAll = async (req, res) => {
   const {
     user,
   } = req;
+  console.log('lalalalala');
+  console.log(user);
 
   try {
     const response = await findAllService(user.id);
@@ -50,6 +52,7 @@ exports.findAllCompleted = async (req, res) => {
 
   try {
     const response = await findAllCompletedService(user.id);
+    console.log(response);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -61,9 +64,10 @@ exports.findAllCompleted = async (req, res) => {
 
 exports.findOne = async (req, res) => {
   const { id } = req.params;
+  const { id: userId } = req.user;
 
   try {
-    const response = await findByPkService(id);
+    const response = await findByPkService(id, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -106,7 +110,7 @@ exports.remove = async (req, res) => {
   }
 };
 
-exports.completeTask = async (req, res) => { // aqui
+exports.completeTask = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
