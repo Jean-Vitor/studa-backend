@@ -2,6 +2,13 @@ const Sequelize = require('sequelize');
 const database = require('../config/db.config');
 const User = require('./User');
 
+function getYesterdayDate() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  return yesterday.toISOString().slice(0, 10);
+}
+
 const Task = database.define('task', {
   id: {
     type: Sequelize.INTEGER,
@@ -23,6 +30,10 @@ const Task = database.define('task', {
   },
   conclusionDate: {
     type: Sequelize.DATE,
+    validate: {
+      isAfter: getYesterdayDate(),
+      isDate: true,
+    },
   },
   completed: {
     type: Sequelize.BOOLEAN,
