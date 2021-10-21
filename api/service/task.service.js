@@ -8,10 +8,8 @@ const {
 } = require('../repository/task.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 
-exports.createService = (body, user) => {
+exports.createService = (body, userId) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
-
-  const { id } = user;
 
   const {
     title,
@@ -25,7 +23,7 @@ exports.createService = (body, user) => {
     description,
     priority,
     conclusionDate,
-    userId: id,
+    userId,
   };
 
   return createTaskRepository(newTask);
@@ -35,7 +33,10 @@ exports.findAllService = (userId) => findAllTasksRepository(userId);
 
 exports.findAllCompletedService = (userId) => findAllCompletedTasksRepository(userId);
 
-exports.findByPkService = async (id) => {
+exports.findByPkService = async (id, userId) => {
+  const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
+  if (!isTaskOwner) throw httpException(UNAUTHORIZED);
+
   const data = await findTaskByPkRepository(id);
 
   if (!data) throw httpException(NOT_FOUND);
