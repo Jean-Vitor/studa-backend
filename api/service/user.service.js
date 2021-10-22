@@ -2,15 +2,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const httpException = require('../exception/http-exception');
+const { INVALID_EMAIL, INVALID_PASSWORD, INVALID_USER } = require('../constants/exception-validation.constant');
 const { BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } = require('../constants/http-exception.constant');
 const {
   registerRepository,
-  findOneUserRepository,
   removeUserRepository,
   updateUserRepository,
   findUserByPkRepository,
+  findOneUserRepository,
 } = require('../repository/user.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
+const isUserExists = require('../utils/isUserExists');
+const passwordDoesNotMatch = require('../utils/passwordDoesNotMatch');
 
 exports.registerService = async (body) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
@@ -21,20 +24,14 @@ exports.registerService = async (body) => {
     name,
   } = body;
 
-  const passwordDoesNotMatch = () => {
-    const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
-    return !!(password.includes(' ') || !password.match(regex));
-  };
-
-  if (passwordDoesNotMatch) {
-    throw httpException({ code: 400, message: 'Validation error: password is not valid' });
+  if (passwordDoesNotMatch(password)) {
+    throw httpException(INVALID_PASSWORD);
   }
+
+  if (await isUserExists({ where: { email } })) throw httpException(INVALID_EMAIL);
 
   try {
     const hash = await bcrypt.hash(password, 10);
-    const user = await findOneUserRepository({ where: { email } });
-    if (user) throw httpException({ code: 409, message: 'Validation error: email already exist' });
-
     const newUser = {
       email,
       password: hash,
@@ -54,14 +51,15 @@ exports.loginService = async (body) => {
     password,
   } = body;
 
+  if (!await isUserExists({ where: { email } })) throw httpException(INVALID_USER);
+
   const user = await findOneUserRepository({ where: { email } });
-  if (!user) throw httpException(UNAUTHORIZED);
 
   const isPasswordCorrectly = await bcrypt.compare(password, user.password);
 
   if (!isPasswordCorrectly) throw httpException(UNAUTHORIZED);
 
-  const token = jwt.sign({
+  return jwt.sign({
     id: user.id,
     email: user.email,
     name: user.name,
@@ -70,8 +68,6 @@ exports.loginService = async (body) => {
   {
     expiresIn: '24h',
   });
-
-  return token;
 };
 
 exports.removeUserService = async (id) => {
@@ -91,9 +87,8 @@ exports.updatePasswordUserService = async (id, body) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
   const { currentPassword, newPassword } = body;
 
-  const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
-  if (newPassword.includes(' ') || !newPassword.match(regex)) {
-    throw httpException({ code: 400, message: 'Validation error: password is not valid' });
+  if (passwordDoesNotMatch(newPassword)) {
+    throw httpException(INVALID_PASSWORD);
   }
 
   const user = await findUserByPkRepository(id);
