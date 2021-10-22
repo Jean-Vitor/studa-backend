@@ -1,23 +1,23 @@
 const {
-  findAllService,
-  findAllCompletedService,
-  createService,
-  removeService,
-  updateService,
-  findByPkService,
+  findAllTasksService,
+  findAllCompletedTasksService,
+  createTaskService,
+  removeTaskService,
+  updateTaskService,
+  findTaskByPkService,
   completeTaskService,
 } = require('../service/task.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
 
-exports.create = async (req, res) => {
+exports.createTask = async (req, res) => {
   const {
     body,
     user,
   } = req;
 
   try {
-    const response = await createService(body, user.id);
+    const response = await createTaskService(body, user.id);
     res.status(201).send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -27,7 +27,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.findAll = async (req, res) => {
+exports.findAllTasks = async (req, res) => {
   const {
     user,
   } = req;
@@ -35,7 +35,7 @@ exports.findAll = async (req, res) => {
   console.log(user);
 
   try {
-    const response = await findAllService(user.id);
+    const response = await findAllTasksService(user.id);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -45,13 +45,13 @@ exports.findAll = async (req, res) => {
   }
 };
 
-exports.findAllCompleted = async (req, res) => {
+exports.findAllCompletedTasks = async (req, res) => {
   const {
     user,
   } = req;
 
   try {
-    const response = await findAllCompletedService(user.id);
+    const response = await findAllCompletedTasksService(user.id);
     console.log(response);
     res.send(response);
   } catch (err) {
@@ -62,12 +62,12 @@ exports.findAllCompleted = async (req, res) => {
   }
 };
 
-exports.findOne = async (req, res) => {
+exports.findOneTask = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
   try {
-    const response = await findByPkService(id, userId);
+    const response = await findTaskByPkService(id, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -77,7 +77,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+exports.updateTask = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
   const {
@@ -85,7 +85,7 @@ exports.update = async (req, res) => {
   } = req;
 
   try {
-    const response = await updateService(id, body, userId);
+    const response = await updateTaskService(id, body, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -95,12 +95,12 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.remove = async (req, res) => {
+exports.removeTask = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
   try {
-    await removeService(id, userId);
+    await removeTaskService(id, userId);
     res.status(200).send();
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);

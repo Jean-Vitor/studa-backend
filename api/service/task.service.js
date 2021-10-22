@@ -8,7 +8,7 @@ const {
 } = require('../repository/task.repository');
 const isEmptyBody = require('../utils/isEmptyBody');
 
-exports.createService = (body, userId) => {
+exports.createTaskService = (body, userId) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
 
   const {
@@ -29,11 +29,11 @@ exports.createService = (body, userId) => {
   return createTaskRepository(newTask);
 };
 
-exports.findAllService = (userId) => findAllTasksRepository(userId);
+exports.findAllTasksService = (userId) => findAllTasksRepository(userId);
 
-exports.findAllCompletedService = (userId) => findAllCompletedTasksRepository(userId);
+exports.findAllCompletedTasksService = (userId) => findAllCompletedTasksRepository(userId);
 
-exports.findByPkService = async (id, userId) => {
+exports.findTaskByPkService = async (id, userId) => {
   const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
   if (!isTaskOwner) throw httpException(UNAUTHORIZED);
 
@@ -44,7 +44,7 @@ exports.findByPkService = async (id, userId) => {
   return data;
 };
 
-exports.removeService = async (id, userId) => {
+exports.removeTaskService = async (id, userId) => {
   const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
   if (!isTaskOwner) throw httpException(UNAUTHORIZED);
 
@@ -52,7 +52,7 @@ exports.removeService = async (id, userId) => {
   if (!responseID) throw httpException(NOT_FOUND);
 };
 
-exports.updateService = async (id, body, userId) => {
+exports.updateTaskService = async (id, body, userId) => {
   const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
   if (!isTaskOwner) throw httpException(UNAUTHORIZED);
 

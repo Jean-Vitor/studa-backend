@@ -21,8 +21,12 @@ exports.registerService = async (body) => {
     name,
   } = body;
 
-  const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
-  if (password.includes(' ') || !password.match(regex)) {
+  const passwordDoesNotMatch = () => {
+    const regex = '(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z]).{8,}$';
+    return !!(password.includes(' ') || !password.match(regex));
+  };
+
+  if (passwordDoesNotMatch) {
     throw httpException({ code: 400, message: 'Validation error: password is not valid' });
   }
 

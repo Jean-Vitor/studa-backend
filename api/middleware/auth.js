@@ -12,10 +12,8 @@ const authUser = async (req, res, next) => {
   const { code, message } = UNAUTHORIZED;
   const { authorization } = req.headers;
   if (!authorization) res.status(code).send({ message });
-  console.log(authorization);
   try {
     const decodedUser = getDecodedUser(authorization);
-    console.log(decodedUser);
     const isUserExists = await findOneUserRepository({
       where: {
         id: decodedUser.id,

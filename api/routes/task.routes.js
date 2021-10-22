@@ -1,24 +1,30 @@
 const { Router } = require('express');
 const {
-  create, findAll, findAllCompleted, findOne, update, remove, completeTask,
+  createTask,
+  completeTask,
+  findAllTasks,
+  findAllCompletedTasks,
+  findOneTask,
+  updateTask,
+  removeTask,
 } = require('../controller/task.controller');
 
 const auth = require('../middleware/auth');
 
 const router = Router();
 
-router.post('/task', auth, create);
+router.post('/task', auth, createTask);
 
-router.get('/task', auth, findAll);
+router.get('/task', auth, findAllTasks);
 
-router.get('/task/completed', auth, findAllCompleted);
+router.get('/task/completed', auth, findAllCompletedTasks);
 
-router.get('/task/:id', auth, findOne);
+router.get('/task/:id', auth, findOneTask);
 
 router.post('/task/completed/:id', auth, completeTask);
 
-router.put('/task/:id', auth, update);
+router.put('/task/:id', auth, updateTask);
 
-router.delete('/task/:id', auth, remove);
+router.delete('/task/:id', auth, removeTask);
 
 module.exports = router;
