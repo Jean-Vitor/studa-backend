@@ -1,23 +1,23 @@
 const {
-  findAllTasksService,
-  findAllCompletedTasksService,
-  createTaskService,
-  removeTaskService,
-  updateTaskService,
-  completeTaskService,
-  findOneTaskService,
-} = require('../service/task.service');
+  findAllEventsService,
+  findAllCompletedEventsService,
+  createEventService,
+  removeEventService,
+  updateEventService,
+  findOneEventService,
+  completeEventService,
+} = require('../service/event.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
 
-exports.createTask = async (req, res) => {
+exports.createEvent = async (req, res) => {
   const {
     body,
     user,
   } = req;
 
   try {
-    const response = await createTaskService(body, user.id);
+    const response = await createEventService(body, user.id);
     res.status(201).send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -27,15 +27,13 @@ exports.createTask = async (req, res) => {
   }
 };
 
-exports.findAllTasks = async (req, res) => {
+exports.findAllEvents = async (req, res) => {
   const {
     user,
   } = req;
-  console.log('lalalalala');
-  console.log(user);
 
   try {
-    const response = await findAllTasksService(user.id);
+    const response = await findAllEventsService(user.id);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -45,14 +43,13 @@ exports.findAllTasks = async (req, res) => {
   }
 };
 
-exports.findAllCompletedTasks = async (req, res) => {
+exports.findAllCompletedEvents = async (req, res) => {
   const {
     user,
   } = req;
 
   try {
-    const response = await findAllCompletedTasksService(user.id);
-    console.log(response);
+    const response = await findAllCompletedEventsService(user.id);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -62,12 +59,12 @@ exports.findAllCompletedTasks = async (req, res) => {
   }
 };
 
-exports.findOneTask = async (req, res) => {
+exports.findOneEvent = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
   try {
-    const response = await findOneTaskService(id, userId);
+    const response = await findOneEventService(id, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -77,7 +74,7 @@ exports.findOneTask = async (req, res) => {
   }
 };
 
-exports.updateTask = async (req, res) => {
+exports.updateEvent = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
   const {
@@ -85,7 +82,7 @@ exports.updateTask = async (req, res) => {
   } = req;
 
   try {
-    const response = await updateTaskService(id, body, userId);
+    const response = await updateEventService(id, body, userId);
     res.send(response);
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -95,12 +92,12 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-exports.removeTask = async (req, res) => {
+exports.removeEvent = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
   try {
-    await removeTaskService(id, userId);
+    await removeEventService(id, userId);
     res.status(200).send();
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
@@ -110,12 +107,12 @@ exports.removeTask = async (req, res) => {
   }
 };
 
-exports.completeTask = async (req, res) => {
+exports.completeEvent = async (req, res) => {
   const { id } = req.params;
   const { id: userId } = req.user;
 
   try {
-    await completeTaskService(id, userId);
+    await completeEventService(id, userId);
     res.status(200).send();
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);

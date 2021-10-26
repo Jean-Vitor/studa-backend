@@ -20,9 +20,23 @@ const Event = database.define('event', {
   },
   startDate: {
     type: Sequelize.DATE,
+    allowNull: false,
+
+    isGreaterThanEndDate(value) {
+      if (Date.parse(value) > Date.parse(this.endDate)) {
+        throw new Error('Start date must be minor than end date.');
+      }
+    },
   },
   endDate: {
     type: Sequelize.DATE,
+    allowNull: false,
+
+    isLessThanStartDate(value) {
+      if (Date.parse(value) < Date.parse(this.startDate)) {
+        throw new Error('End date must be greater than start date.');
+      }
+    },
   },
   completed: {
     type: Sequelize.BOOLEAN,

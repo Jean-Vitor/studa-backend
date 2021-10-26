@@ -33,7 +33,7 @@ exports.findAllTasksService = (userId) => findAllTasksRepository(userId);
 
 exports.findAllCompletedTasksService = (userId) => findAllCompletedTasksRepository(userId);
 
-exports.findTaskByPkService = async (id, userId) => {
+exports.findOneTaskService = async (id, userId) => {
   const isTaskOwner = await findOneTaskRepository({ where: { id, userId } });
   if (!isTaskOwner) throw httpException(UNAUTHORIZED);
 
