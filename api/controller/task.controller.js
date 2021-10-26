@@ -9,6 +9,7 @@ const {
 } = require('../service/task.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
+const { findOneTask } = require('./task.controller');
 
 exports.createTask = async (req, res) => {
   const {
