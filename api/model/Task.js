@@ -19,14 +19,29 @@ const Task = database.define('task', {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Title cannot be empty!',
+      },
+    },
   },
   description: {
     type: Sequelize.TEXT,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Description cannot be empty!',
+      },
+    },
   },
   priority: {
     type: Sequelize.ENUM('LOW', 'HIGH'),
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'You must choose the type of priority!',
+      },
+    },
   },
   conclusionDate: {
     type: Sequelize.DATE,
