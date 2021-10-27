@@ -12,10 +12,20 @@ const Event = database.define('event', {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Title cannot be empty!',
+      },
+    },
   },
   description: {
     type: Sequelize.TEXT,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Description cannot be empty!',
+      },
+    },
   },
   startDate: {
     type: Sequelize.DATE,
