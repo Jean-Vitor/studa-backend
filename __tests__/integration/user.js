@@ -1,10 +1,12 @@
 const request = require('supertest');
 const server = require('../../start');
 const database = require('../../api/config/db.config');
+const User = require('../../api/model/User');
 
 describe('User Endpoints', () => {
-  afterAll(() => {
-    database.close();
+  afterAll(async () => {
+    await User.sync({ force: true });
+    await database.close();
   });
 
   it('should create a new user', async () => {
@@ -16,8 +18,7 @@ describe('User Endpoints', () => {
         password: 'Password123',
       });
 
-    console.log(user);
-
-    expect(user.statusCode).toBe(201);
+    expect(user.statusCode)
+      .toBe(201);
   });
 });

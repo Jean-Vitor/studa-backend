@@ -4,7 +4,7 @@ const PORT = 8000;
 const database = require('./api/config/db.config');
 
 (async () => {
-  await database.sync({ force: true });
+  await database.sync();
   await app.listen(PORT);
 })();
 
