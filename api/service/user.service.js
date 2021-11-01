@@ -51,18 +51,22 @@ exports.loginService = async (body) => {
     password,
   } = body;
 
+  console.log(email, password);
+
+  console.log(!await isUserExists({ where: { email } }));
+
   if (!await isUserExists({ where: { email } })) throw httpException(INVALID_USER);
 
-  const user = await findOneUserRepository({ where: { email } });
+  const { dataValues } = await findOneUserRepository({ where: { email } });
 
-  const isPasswordCorrectly = await bcrypt.compare(password, user.password);
+  const isPasswordCorrectly = await bcrypt.compare(password, dataValues.password);
 
   if (!isPasswordCorrectly) throw httpException(UNAUTHORIZED);
 
   return jwt.sign({
-    id: user.id,
-    email: user.email,
-    name: user.name,
+    id: dataValues.id,
+    email: dataValues.email,
+    name: dataValues.name,
   },
   `${process.env.JWT_KEY}`,
   {

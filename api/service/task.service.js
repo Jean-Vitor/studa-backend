@@ -58,7 +58,21 @@ exports.updateTaskService = async (id, body, userId) => {
 
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
 
-  const [responseID] = await updateTaskRepository(id, body);
+  const {
+    title,
+    description,
+    priority,
+    conclusionDate,
+  } = body;
+
+  const filteredBody = {
+    title,
+    description,
+    priority,
+    conclusionDate,
+  };
+
+  const [responseID] = await updateTaskRepository(id, filteredBody);
   if (!responseID) throw httpException(NOT_FOUND);
 };
 

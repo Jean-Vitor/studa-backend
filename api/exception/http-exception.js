@@ -4,20 +4,25 @@ const { INTERNAL_SERVER_ERROR } = EXCEPTIONS;
 
 const httpException = (error) => {
   const newError = new Error();
-  const {
-    code,
-    message: objMessage,
-    status: errorStatus,
-  } = error;
   const isError = error instanceof Error;
+
+  const errorStatus = error?.status;
 
   if (isError && errorStatus) {
     return error;
   }
 
-  if (code && objMessage) {
+  const code = error?.code;
+  const errorMessage = error?.message;
+
+  if (!errorStatus && !errorMessage && code) {
     newError.status = code;
-    newError.message = objMessage;
+    return newError;
+  }
+
+  if (!errorStatus && errorMessage && code) {
+    newError.status = code;
+    newError.message = errorMessage;
     return newError;
   }
 

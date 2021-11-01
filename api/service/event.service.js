@@ -1,5 +1,5 @@
 const httpException = require('../exception/http-exception');
-const { NOT_FOUND, BAD_REQUEST, UNAUTHORIZED } = require('../constants/http-exception.constant');
+const { NOT_FOUND, BAD_REQUEST } = require('../constants/http-exception.constant');
 const {
   createEventRepository, removeEventRepository,
   findAllEventsRepository, findAllCompletedEventsRepository,
@@ -12,11 +12,17 @@ exports.createEventService = (body, userId) => {
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
 
   const {
-
+    title,
+    description,
+    startDate,
+    endDate,
   } = body;
 
   const newEvent = {
-
+    title,
+    description,
+    startDate,
+    endDate,
     userId,
   };
 
@@ -29,7 +35,7 @@ exports.findAllCompletedEventsService = (userId) => findAllCompletedEventsReposi
 
 exports.findOneEventService = async (id, userId) => {
   const isEventOwner = await findOneEventRepository({ where: { id, userId } });
-  if (!isEventOwner) throw httpException(UNAUTHORIZED);
+  if (!isEventOwner) throw httpException(BAD_REQUEST);
 
   const data = await findEventByPkRepository(id);
 
@@ -40,7 +46,7 @@ exports.findOneEventService = async (id, userId) => {
 
 exports.removeEventService = async (id, userId) => {
   const isEventOwner = await findOneEventRepository({ where: { id, userId } });
-  if (!isEventOwner) throw httpException(UNAUTHORIZED);
+  if (!isEventOwner) throw httpException(BAD_REQUEST);
 
   const responseID = await removeEventRepository(id);
   if (!responseID) throw httpException(NOT_FOUND);
@@ -48,17 +54,31 @@ exports.removeEventService = async (id, userId) => {
 
 exports.updateEventService = async (id, body, userId) => {
   const isEventOwner = await findOneEventRepository({ where: { id, userId } });
-  if (!isEventOwner) throw httpException(UNAUTHORIZED);
+  if (!isEventOwner) throw httpException(BAD_REQUEST);
 
   if (isEmptyBody(body)) throw httpException(BAD_REQUEST);
 
-  const [responseID] = await updateEventRepository(id, body);
+  const {
+    title,
+    description,
+    startDate,
+    endDate,
+  } = body;
+
+  const filteredBody = {
+    title,
+    description,
+    startDate,
+    endDate,
+  };
+
+  const [responseID] = await updateEventRepository(id, filteredBody);
   if (!responseID) throw httpException(NOT_FOUND);
 };
 
 exports.completeEventService = async (id, userId) => {
   const isEventOwner = await findOneEventRepository({ where: { id, userId } });
-  if (!isEventOwner) throw httpException(UNAUTHORIZED);
+  if (!isEventOwner) throw httpException(BAD_REQUEST);
 
   const [responseID] = await completeEventRepository(id);
   if (!responseID) throw httpException(NOT_FOUND);
