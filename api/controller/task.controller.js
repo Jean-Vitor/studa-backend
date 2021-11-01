@@ -9,7 +9,6 @@ const {
 } = require('../service/task.service');
 
 const getStatusAndMessageError = require('../utils/getStatusAndMessageError');
-const { findOneTask } = require('./task.controller');
 
 exports.createTask = async (req, res) => {
   const {
@@ -32,8 +31,6 @@ exports.findAllTasks = async (req, res) => {
   const {
     user,
   } = req;
-  console.log('lalalalala');
-  console.log(user);
 
   try {
     const response = await findAllTasksService(user.id);

@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const database = require('../config/db.config');
-const Tag = require('./Tag');
 const User = require('./User');
 
 const Event = database.define('event', {
@@ -43,8 +42,6 @@ const Event = database.define('event', {
     defaultValue: false,
   },
 });
-
-Event.belongsTo(Tag);
 
 Event.belongsTo(User, {
   constraint: true,
