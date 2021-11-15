@@ -1,9 +1,9 @@
 const Sequelize = require('sequelize');
 
-const database = new Sequelize('studa', 'docker', 'docker', {
+const database = new Sequelize('studaDB', 'studa-db', 'ADMstuda_1', {
   dialect: 'mysql',
   host: 'localhost',
-  port: 9000,
+  port: 3306,
 });
 
 module.exports = database;
