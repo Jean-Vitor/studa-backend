@@ -27,15 +27,14 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const {
     body,
-    user
   } = req;
 
   try {
     const response = await loginService(body);
     res.status(200).send({
       message: 'Successfully authenticated user',
-      token: response,
-      user
+      token: response.token,
+      user: response.user
     });
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);

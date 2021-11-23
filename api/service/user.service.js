@@ -63,15 +63,24 @@ exports.loginService = async (body) => {
 
   if (!isPasswordCorrectly) throw httpException(UNAUTHORIZED);
 
-  return jwt.sign({
-    id: dataValues.id,
-    email: dataValues.email,
-    name: dataValues.name,
-  },
-  `${process.env.JWT_KEY}`,
-  {
-    expiresIn: '24h',
-  });
+  const getJWT = () => (
+    jwt.sign({
+      id: dataValues.id,
+      email: dataValues.email,
+      name: dataValues.name,
+    },
+    `${process.env.JWT_KEY}`,
+    {
+      expiresIn: '24h',
+    })
+  )
+
+
+  return {
+    token: getJWT(),
+    user: {name: dataValues.name, email: dataValues.email}
+  }
+  
 };
 
 exports.removeUserService = async (id) => {
