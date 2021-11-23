@@ -89,3 +89,18 @@ exports.updatePasswordUser = async (req, res) => {
     });
   }
 };
+
+exports.getUser = async (req, res) => {
+  const {
+    user,
+  } = req;
+
+  try {
+    res.send(user);
+  } catch (err) {
+    const { status, message } = getStatusAndMessageError(err);
+    res.status(status).send({
+      message,
+    });
+  }
+};
