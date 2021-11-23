@@ -27,6 +27,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const {
     body,
+    user
   } = req;
 
   try {
@@ -34,6 +35,7 @@ exports.login = async (req, res) => {
     res.status(200).send({
       message: 'Successfully authenticated user',
       token: response,
+      user
     });
   } catch (err) {
     const { status, message } = getStatusAndMessageError(err);
